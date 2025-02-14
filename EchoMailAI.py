@@ -23,7 +23,7 @@ def reset_state():
 
 # Function to transcribe using Whisper
 def transcribe_audio(filename):
-    model = whisper.load_model("medium")
+    model = whisper.load_model("small")
     result = model.transcribe(filename, language="en")
     return result["text"]
 
