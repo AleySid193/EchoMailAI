@@ -1,10 +1,7 @@
 streamlit
 numpy<=2.1
 whisper
-wave
 google-generativeai
 torch
 numba
-streamlit-webrtc
-av
-aioice
+streamlit-mic-recorder
