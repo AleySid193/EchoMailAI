@@ -6,7 +6,7 @@ import av
 import tempfile
 import os
 import webbrowser
-from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, ClientSettings
+from streamlit_webrtc import webrtc_streamer, WebRtcMode
 
 # Set Streamlit Page Config
 st.set_page_config(page_title="EchoMail AI", page_icon="📧")
@@ -63,13 +63,14 @@ st.write("Record your voice, transcribe it, and generate an email!")
 
 webrtc_ctx = webrtc_streamer(
     key="audio-recorder",
-    mode="sendonly",
+    mode=WebRtcMode.SENDONLY,  # ✅ Use the enum instead of a string
     client_settings=ClientSettings(
         rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
         media_stream_constraints={"audio": True, "video": False},
     ),
     audio_processor_factory=AudioProcessor,
 )
+
 
 # ✅ Process Recorded Audio
 if st.session_state.audio_data is not None:
