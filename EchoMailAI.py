@@ -69,7 +69,7 @@ def save_audio():
                 wf.setframerate(SAMPLE_RATE)
                 wf.writeframes(audio_data.tobytes())
 
-            st.session_state.audio_filename = temp_wav.name
+            st.session_state.audio_filename = temp_wav.name  # Update session state
             return temp_wav.name
     return None
 
