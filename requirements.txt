@@ -1,6 +1,6 @@
 streamlit
 numpy<=2.1
-whisper
+openai-whisper
 google-generativeai
 torch
 numba
