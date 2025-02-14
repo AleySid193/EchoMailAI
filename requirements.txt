@@ -5,3 +5,4 @@ google-generativeai
 torch
 numba
 streamlit-mic-recorder
+ffmpeg-python
