@@ -50,13 +50,18 @@ st.write("Record your voice, transcribe it, and generate an email!")
 wav_audio = mic_recorder(start_prompt="Start Recording", stop_prompt="Stop Recording", key="mic")
 
 if wav_audio:
-    temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-    temp_wav.write(wav_audio)
-    temp_wav.close()
-    
-    text = transcribe_audio(temp_wav.name)
-    st.session_state.transcribed_text = text
-    st.markdown(f" **Transcribed Text:**  \n{text}")
+    if isinstance(wav_audio, dict) and "bytes" in wav_audio:  # ✅ Extract raw bytes
+        audio_bytes = wav_audio["bytes"]
+
+        temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+        temp_wav.write(audio_bytes)  # ✅ Write actual bytes
+        temp_wav.close()
+
+        text = transcribe_audio(temp_wav.name)
+        st.session_state.transcribed_text = text
+        st.markdown(f"📝 **Transcribed Text:**  \n{text}")
+    else:
+        st.error("❌ Error: No valid audio recorded.")
 
 # Generate Email Button
 if st.session_state.transcribed_text and not st.session_state.email_content:
