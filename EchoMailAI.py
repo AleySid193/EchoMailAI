@@ -3,8 +3,7 @@ import whisper
 import google.generativeai as genai
 import os
 import tempfile
-from pydub import AudioSegment
-from streamlit_audio_recorder import st_audio_recorder
+from streamlit_mic_recorder import st_mic_recorder
 import webbrowser
 
 # Set Streamlit Page Config
@@ -54,8 +53,8 @@ def open_gmail(subject, body):
 st.title("🎙️ Welcome to EchoMail AI!")
 st.write("Record your voice, transcribe it, and generate an email!")
 
-# 🎤 **Record Audio**
-audio_bytes = st_audio_recorder("Click to record", format="wav")
+# 🎤 **Record Audio Using `st_mic_recorder`**
+audio_bytes = st_mic_recorder(start_prompt="Start Recording", stop_prompt="Stop Recording", key="recorder")
 
 if audio_bytes:
     st.audio(audio_bytes, format="audio/wav")  # Playback recorded audio
