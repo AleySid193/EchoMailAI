@@ -1,13 +1,18 @@
 import streamlit as st
 import whisper
 import google.generativeai as genai
-import sounddevice as sd
 import numpy as np
 import wave
 import webbrowser
 import tempfile
 import time
 import os
+
+if "STREAMLIT_ENV" in os.environ:  # Detects Streamlit Cloud
+    sd = None  # Disable sounddevice
+else:
+    import sounddevice as sd
+
 
 st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
@@ -42,11 +47,15 @@ def reset_state():
 
 # Function to record audio
 def record_audio():
+    if sd is None:
+        st.warning("⚠️ Audio recording is disabled on Streamlit Cloud.")
+        return None
+
     st.session_state.recording = True
+    duration = 5  # Recording duration in seconds
     st.write("🎤 Recording... Click 'Stop' to finish.")
-    duration = 5  # Set duration
     st.session_state.audio_data = sd.rec(int(duration * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype=np.int16)
-    sd.wait()  # Ensure recording finishes
+    sd.wait()
 
 # Function to stop recording and save the file
 def stop_recording():
