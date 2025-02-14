@@ -5,7 +5,7 @@ import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
 
-st.set_page_config(page_title="EchoMailAI", page_icon="\ud83d\udce7")
+st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=API_KEY)
 
@@ -59,7 +59,7 @@ if wav_audio:
 
         text = transcribe_audio(temp_wav.name)
         st.session_state.transcribed_text = text
-        st.markdown(f"\ud83d\udcdd **Transcribed Text:**  \n{text}")
+        st.markdown(f"**Transcribed Text:**  \n{text}")
     else:
         st.error("❌ Error: No valid audio recorded.")
 
