@@ -5,7 +5,7 @@ import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
 
-st.set_page_config(page_title="EchoMailAI", page_icon="📧")
+st.set_page_config(page_title="EchoMailAI", page_icon="\ud83d\udce7")
 API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=API_KEY)
 
@@ -40,7 +40,7 @@ def generate_email_content(prompt):
 def open_gmail(subject, body):
     formatted_body = body.replace("\n", "%0A")  # Convert new lines to URL-encoded format
     gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={subject}&body={formatted_body}"
-    st.markdown(f"[Open in Gmail]({gmail_url})", unsafe_allow_html=True)
+    webbrowser.open(gmail_url)
 
 # Streamlit UI
 st.title("Welcome to EchoMail AI!")
@@ -59,7 +59,7 @@ if wav_audio:
 
         text = transcribe_audio(temp_wav.name)
         st.session_state.transcribed_text = text
-        st.markdown(f"📝 **Transcribed Text:**  \n{text}")
+        st.markdown(f"\ud83d\udcdd **Transcribed Text:**  \n{text}")
     else:
         st.error("❌ Error: No valid audio recorded.")
 
