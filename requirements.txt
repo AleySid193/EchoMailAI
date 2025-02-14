@@ -1,3 +1,7 @@
-streamlit-mic-recorder
-whisper
+streamlit
+streamlit-webrtc
+numpy
+torch
+openai-whisper
 google-generativeai
+av
