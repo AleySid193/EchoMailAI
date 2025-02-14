@@ -28,7 +28,6 @@ def reset_state():
     st.session_state.audio_data = None
     st.session_state.transcribed_text = None
     st.session_state.email_content = None
-    st.rerun()
 
 # Function to transcribe using Whisper
 def transcribe_audio(filename):
@@ -91,7 +90,6 @@ if st.session_state.audio_data is not None:
 if st.session_state.transcribed_text and not st.session_state.email_content:
     if st.button("Generate Email"):
         st.session_state.email_content = generate_email_content(st.session_state.transcribed_text)
-        st.rerun()
 
 # ✅ Show Email Content
 if st.session_state.email_content:
