@@ -1,6 +1,8 @@
 streamlit
-numpy
+numpy<=2.1
 sounddevice
 whisper
 wave
 google-generativeai
+torch
+numba
