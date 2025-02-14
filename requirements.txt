@@ -1,9 +1,9 @@
 streamlit
 numpy<=2.1
-pyaudio
-sounddevice
 whisper
 wave
 google-generativeai
 torch
 numba
+streamlit-webrtc
+av
