@@ -34,7 +34,7 @@ def generate_email_content(prompt):
         response = model.generate_content(f"Write a professional email based on this text: {prompt}")
         return response.text
     except Exception as e:
-        return f"\u274c Error: {str(e)}"
+        return f" Error: {str(e)}"
 
 # Function to open Gmail with the generated email
 def open_gmail(subject, body):
@@ -43,7 +43,7 @@ def open_gmail(subject, body):
     st.markdown(f"[Open in Gmail]({gmail_url})", unsafe_allow_html=True)
 
 # Streamlit UI
-st.title("\ud83c\udfa7 Welcome to EchoMail AI!")
+st.title("Welcome to EchoMail AI!")
 st.write("Record your voice, transcribe it, and generate an email!")
 
 # Record Audio
@@ -56,7 +56,7 @@ if wav_audio:
     
     text = transcribe_audio(temp_wav.name)
     st.session_state.transcribed_text = text
-    st.markdown(f"\ud83d\udcdd **Transcribed Text:**  \n{text}")
+    st.markdown(f" **Transcribed Text:**  \n{text}")
 
 # Generate Email Button
 if st.session_state.transcribed_text and not st.session_state.email_content:
@@ -67,12 +67,12 @@ if st.session_state.transcribed_text and not st.session_state.email_content:
 
 # Show email and options
 if st.session_state.email_content:
-    st.write("\ud83d\udce7 **Generated Email:**", st.session_state.email_content)
+    st.write(" **Generated Email:**", st.session_state.email_content)
     
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Open in Gmail"):
             open_gmail("Generated Email", st.session_state.email_content)
     with col2:
-        if st.button("\u274c Discard & Restart"):
+        if st.button(" Discard & Restart"):
             reset_state()
