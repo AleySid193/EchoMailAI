@@ -4,4 +4,4 @@ numpy
 torch
 openai-whisper
 google-generativeai
-av
+av>=10.0.0
