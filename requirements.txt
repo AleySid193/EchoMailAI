@@ -1,4 +1,3 @@
-streamlit_audio_recorder
+streamlit-mic-recorder
 whisper
 google-generativeai
-pydub
