@@ -34,12 +34,25 @@ def audio_callback(frame: av.AudioFrame):
 webrtc_ctx = webrtc_streamer(
     key="record-audio",
     mode=WebRtcMode.SENDRECV,
-    client_settings=ClientSettings(
-        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
-        media_stream_constraints={"video": False, "audio": True},
-    ),
+    rtc_configuration={
+    "iceServers": [
+        {"urls": "stun:stun.l.google.com:19302"},
+        {"urls": "stun:stun1.l.google.com:19302"},
+        {"urls": "stun:stun2.l.google.com:19302"},
+        {"urls": "stun:stun3.l.google.com:19302"},
+        {"urls": "stun:stun4.l.google.com:19302"},
+        {
+            "urls": "turn:turn.anyfirewall.com:443?transport=tcp",
+            "username": "webrtc",
+            "credential": "webrtctest",
+        },
+    ]
+}
+
+    media_stream_constraints={"video": False, "audio": True},
     audio_receiver_size=1024,
 )
+
 
 # Function to save WebRTC audio to a file
 def save_audio():
