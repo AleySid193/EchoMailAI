@@ -1,10 +1,12 @@
 import streamlit as st
 import whisper
 import google.generativeai as genai
-import os
+import numpy as np
+import av
 import tempfile
-from streamlit_mic_recorder import st_mic_recorder
+import os
 import webbrowser
+from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, ClientSettings
 
 # Set Streamlit Page Config
 st.set_page_config(page_title="EchoMail AI", page_icon="📧")
@@ -49,27 +51,36 @@ def open_gmail(subject, body):
     gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={subject}&body={formatted_body}"
     webbrowser.open(gmail_url)
 
-# Streamlit UI
+# 🎤 **WebRTC Audio Recorder**
+class AudioProcessor(AudioProcessorBase):
+    def recv_audio(self, frame: av.AudioFrame) -> av.AudioFrame:
+        audio_array = frame.to_ndarray()
+        st.session_state.audio_data = audio_array
+        return frame
+
 st.title("🎙️ Welcome to EchoMail AI!")
 st.write("Record your voice, transcribe it, and generate an email!")
 
-# 🎤 **Record Audio Using `st_mic_recorder`**
-audio_bytes = st_mic_recorder(start_prompt="Start Recording", stop_prompt="Stop Recording", key="recorder")
+webrtc_ctx = webrtc_streamer(
+    key="audio-recorder",
+    mode="sendonly",
+    client_settings=ClientSettings(
+        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+        media_stream_constraints={"audio": True, "video": False},
+    ),
+    audio_processor_factory=AudioProcessor,
+)
 
-if audio_bytes:
-    st.audio(audio_bytes, format="audio/wav")  # Playback recorded audio
-
-    # Save audio to a temporary file
-    temp_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-    temp_audio.write(audio_bytes)
-    temp_audio.close()
-    
-    # Transcribe audio using Whisper
-    text = transcribe_audio(temp_audio.name)
-    st.session_state.transcribed_text = text
-
-    # Show Transcription
-    st.markdown(f"📝 **Transcribed Text:**  \n{text}")
+# ✅ Process Recorded Audio
+if st.session_state.audio_data is not None:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+        np.save(temp_audio, st.session_state.audio_data)
+        temp_audio.close()
+        
+        # Transcribe using Whisper
+        text = transcribe_audio(temp_audio.name)
+        st.session_state.transcribed_text = text
+        st.markdown(f"📝 **Transcribed Text:**  \n{text}")
 
 # ✅ Generate Email After Transcription
 if st.session_state.transcribed_text and not st.session_state.email_content:
