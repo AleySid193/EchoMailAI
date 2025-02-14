@@ -1,6 +1,4 @@
-streamlit
+streamlit_audio_recorder
 whisper
 google-generativeai
-sounddevice
-numpy
-wave
+pydub
