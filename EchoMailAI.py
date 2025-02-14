@@ -42,7 +42,8 @@ def open_gmail(subject, body):
     formatted_body = body.replace("\n", "%0A")  # Convert new lines to URL-encoded format
     gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={subject}&body={formatted_body}"
     if st.button("📧 Open in Gmail"):
-        st.markdown(f'<meta http-equiv="refresh" content="0; url={gmail_url}">', unsafe_allow_html=True)
+        # Create a link that will open Gmail in a new tab
+        st.markdown(f'<a href="{gmail_url}" target="_blank">Click here to open in Gmail</a>', unsafe_allow_html=True)
 
 # Streamlit UI
 st.title("Welcome to EchoMail AI!")
