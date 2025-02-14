@@ -6,7 +6,7 @@ import av
 import tempfile
 import os
 import webbrowser
-from streamlit_webrtc import webrtc_streamer, WebRtcMode
+from streamlit_webrtc import webrtc_streamer, WebRtcMode, ClientSettings, AudioProcessorBase
 
 # Set Streamlit Page Config
 st.set_page_config(page_title="EchoMail AI", page_icon="📧")
@@ -53,17 +53,22 @@ def open_gmail(subject, body):
 
 # 🎤 **WebRTC Audio Recorder**
 class AudioProcessor(AudioProcessorBase):
+    def __init__(self):
+        self.audio_buffer = []
+
     def recv_audio(self, frame: av.AudioFrame) -> av.AudioFrame:
         audio_array = frame.to_ndarray()
-        st.session_state.audio_data = audio_array
+        self.audio_buffer.append(audio_array)
+        st.session_state.audio_data = np.concatenate(self.audio_buffer, axis=0) if self.audio_buffer else None
         return frame
 
 st.title("🎙️ Welcome to EchoMail AI!")
 st.write("Record your voice, transcribe it, and generate an email!")
 
+# ✅ WebRTC Audio Recording
 webrtc_ctx = webrtc_streamer(
     key="audio-recorder",
-    mode=WebRtcMode.SENDONLY,  # ✅ Use the enum instead of a string
+    mode=WebRtcMode.SENDONLY,  
     client_settings=ClientSettings(
         rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
         media_stream_constraints={"audio": True, "video": False},
@@ -71,12 +76,11 @@ webrtc_ctx = webrtc_streamer(
     audio_processor_factory=AudioProcessor,
 )
 
-
 # ✅ Process Recorded Audio
 if st.session_state.audio_data is not None:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
-        np.save(temp_audio, st.session_state.audio_data)
-        temp_audio.close()
+        with av.open(temp_audio.name, "w") as output_file:
+            output_file.write(av.AudioFrame.from_ndarray(st.session_state.audio_data, format="s16"))
         
         # Transcribe using Whisper
         text = transcribe_audio(temp_audio.name)
