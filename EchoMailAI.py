@@ -5,7 +5,7 @@ import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
 
-st.set_page_config(page_title="EchoMailAI", page_icon="\ud83d\udce7")
+st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=API_KEY)
 
