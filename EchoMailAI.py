@@ -13,11 +13,14 @@ st.set_page_config(page_title="EchoMail AI", page_icon="📧")
 
 # Load API Key
 API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=API_KEY)
+if API_KEY:
+    genai.configure(api_key=API_KEY)
+else:
+    st.error("⚠️ Missing GEMINI API Key. Set GEMINI_API_KEY in environment variables.")
 
 # Initialize session state variables
 if "audio_data" not in st.session_state:
-    st.session_state.audio_data = None
+    st.session_state.audio_data = []
 if "transcribed_text" not in st.session_state:
     st.session_state.transcribed_text = None
 if "email_content" not in st.session_state:
@@ -25,14 +28,14 @@ if "email_content" not in st.session_state:
 
 # Function to reset state
 def reset_state():
-    st.session_state.audio_data = None
+    st.session_state.audio_data = []
     st.session_state.transcribed_text = None
     st.session_state.email_content = None
 
 # Function to transcribe using Whisper
 def transcribe_audio(filename):
-    model = whisper.load_model("medium")
-    result = model.transcribe(filename, language="en")
+    model = whisper.load_model("base")  # 🔹 Use "base" for faster processing
+    result = model.transcribe(filename)
     return result["text"]
 
 # Function to generate an email with Gemini AI
@@ -58,7 +61,7 @@ class AudioProcessor(AudioProcessorBase):
     def recv_audio(self, frame: av.AudioFrame) -> av.AudioFrame:
         audio_array = frame.to_ndarray()
         self.audio_buffer.append(audio_array)
-        st.session_state.audio_data = np.concatenate(self.audio_buffer, axis=0) if self.audio_buffer else None
+        st.session_state.audio_data.extend(audio_array)  # 🔹 Fix buffer handling
         return frame
 
 st.title("🎙️ Welcome to EchoMail AI!")
@@ -76,15 +79,21 @@ webrtc_ctx = webrtc_streamer(
 )
 
 # ✅ Process Recorded Audio
-if st.session_state.audio_data is not None:
+if st.session_state.audio_data:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
-        with av.open(temp_audio.name, "w") as output_file:
-            output_file.write(av.AudioFrame.from_ndarray(st.session_state.audio_data, format="s16"))
-        
-        # Transcribe using Whisper
-        text = transcribe_audio(temp_audio.name)
-        st.session_state.transcribed_text = text
-        st.markdown(f"📝 **Transcribed Text:**  \n{text}")
+        temp_audio_path = temp_audio.name
+        temp_audio.close()
+
+    # 🔹 Ensure proper WAV file writing
+    with av.open(temp_audio_path, "w") as output_file:
+        for chunk in st.session_state.audio_data:
+            frame = av.AudioFrame.from_ndarray(chunk, format="s16")
+            output_file.write(frame)
+
+    # Transcribe using Whisper
+    text = transcribe_audio(temp_audio_path)
+    st.session_state.transcribed_text = text
+    st.markdown(f"📝 **Transcribed Text:**  \n{text}")
 
 # ✅ Generate Email After Transcription
 if st.session_state.transcribed_text and not st.session_state.email_content:
