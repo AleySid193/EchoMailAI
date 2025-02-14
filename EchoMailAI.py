@@ -4,6 +4,7 @@ import google.generativeai as genai
 import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
+import webbrowser
 
 st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
