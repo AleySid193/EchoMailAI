@@ -6,4 +6,3 @@ torch
 numba
 streamlit-mic-recorder
 ffmpeg-python
-webbrowser
