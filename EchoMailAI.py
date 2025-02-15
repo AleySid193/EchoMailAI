@@ -5,6 +5,7 @@ import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
 import urllib.parse
+import webbrowser  # Import the webbrowser module
 
 st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
@@ -41,7 +42,7 @@ def open_gmail(subject, body):
     encoded_subject = urllib.parse.quote(subject)
     encoded_body = urllib.parse.quote(body)
     gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={encoded_subject}&body={encoded_body}"
-    webbrowser.open_new_tab(gmail_url)
+    webbrowser.open_new_tab(gmail_url)  # Open the Gmail URL in a new tab
 
 # Streamlit UI
 st.title("Welcome to EchoMail AI!")
