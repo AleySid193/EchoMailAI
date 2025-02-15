@@ -4,7 +4,7 @@ import google.generativeai as genai
 import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
-import webbrowser
+import urllib.parse
 
 st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
@@ -20,7 +20,6 @@ if "email_content" not in st.session_state:
 def reset_state():
     st.session_state.transcribed_text = None
     st.session_state.email_content = None
-    st.rerun()  # Refresh UI
 
 # Function to transcribe using Whisper
 def transcribe_audio(filename):
@@ -35,14 +34,14 @@ def generate_email_content(prompt):
         response = model.generate_content(f"Write a professional email based on this text: {prompt}")
         return response.text
     except Exception as e:
-        return f" Error: {str(e)}"
+        return f"Error: {str(e)}"
 
 # Function to open Gmail with the generated email
 def open_gmail(subject, body):
-    formatted_body = body.replace("\n", "%0A")  # Convert new lines to URL-encoded format
-    gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={subject}&body={formatted_body}"
-    st.markdown(f"[Open in Gmail]({gmail_url})", unsafe_allow_html=True)
-
+    encoded_subject = urllib.parse.quote(subject)
+    encoded_body = urllib.parse.quote(body)
+    gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={encoded_subject}&body={encoded_body}"
+    webbrowser.open_new_tab(gmail_url)
 
 # Streamlit UI
 st.title("Welcome to EchoMail AI!")
@@ -70,7 +69,6 @@ if st.session_state.transcribed_text and not st.session_state.email_content:
     if st.button("Generate Email"):
         email_content = generate_email_content(st.session_state.transcribed_text)
         st.session_state.email_content = email_content
-        st.rerun()  # Refresh UI
 
 # Show email and options
 if st.session_state.email_content:
