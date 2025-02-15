@@ -13,23 +13,26 @@ EchoMail is a **Streamlit-powered AI application** that allows you to:
 ---
 
 ## 🖥️ Demo  
-![image](https://github.com/user-attachments/assets/1c3be4b1-a8ce-4ea2-b1c8-ec141f70a40b)
+![image](https://github.com/user-attachments/assets/1ac6f795-f893-41aa-9a4d-a512a5707e41)
+
 
 ---
-![image](https://github.com/user-attachments/assets/45580807-ef64-4eae-aa33-b7ce2117db21)
+![image](https://github.com/user-attachments/assets/4b242291-991c-47a5-ba2f-20840504f5b7)
 
 ---
-![image](https://github.com/user-attachments/assets/5d71b05a-99a5-47b0-b536-3bb98a178986)
+![image](https://github.com/user-attachments/assets/c66be593-4a57-45f8-9e9c-d0105c9f8c9a)
 
 ---
-![image](https://github.com/user-attachments/assets/ad00f2e1-56e3-476e-b56f-bc19a70ec0cd)
+![image](https://github.com/user-attachments/assets/41fa0dbe-13bd-48a0-8c68-3d88d0b6f532)
 
 ---
-![image](https://github.com/user-attachments/assets/1fc941a4-faa1-4fc1-a7df-65cf40c72259)
+After pressing open in gmail button.
+![image](https://github.com/user-attachments/assets/952545d1-ec33-4d73-a043-f9bd29b22eb2)
 
 ---
-![image](https://github.com/user-attachments/assets/b85584aa-417f-40de-a7ae-98c4a9317367)
-
+After pressing discard button.
+![image](https://github.com/user-attachments/assets/8e9ad402-8c23-44ae-be2e-153f8aaba628)
+![image](https://github.com/user-attachments/assets/5a776498-2b63-45d5-b9fe-914884d6586b)
 
 ---
 ## 📌 Features  
