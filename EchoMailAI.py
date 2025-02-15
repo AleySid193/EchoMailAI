@@ -5,7 +5,6 @@ import tempfile
 import os
 from streamlit_mic_recorder import mic_recorder
 import urllib.parse
-import webbrowser  # Import the webbrowser module
 
 st.set_page_config(page_title="EchoMailAI", page_icon="📧")
 API_KEY = os.getenv("GEMINI_API_KEY")
@@ -21,6 +20,7 @@ if "email_content" not in st.session_state:
 def reset_state():
     st.session_state.transcribed_text = None
     st.session_state.email_content = None
+    st.rerun()  # Force a rerun of the app to refresh the UI
 
 # Function to transcribe using Whisper
 def transcribe_audio(filename):
@@ -42,7 +42,7 @@ def open_gmail(subject, body):
     encoded_subject = urllib.parse.quote(subject)
     encoded_body = urllib.parse.quote(body)
     gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&su={encoded_subject}&body={encoded_body}"
-    webbrowser.open_new_tab(gmail_url)  # Open the Gmail URL in a new tab
+    st.markdown(f'<a href="{gmail_url}" target="_blank">Open in Gmail</a>', unsafe_allow_html=True)
 
 # Streamlit UI
 st.title("Welcome to EchoMail AI!")
@@ -77,8 +77,7 @@ if st.session_state.email_content:
     
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("Open in Gmail"):
-            open_gmail("Generated Email", st.session_state.email_content)
+        open_gmail("Generated Email", st.session_state.email_content)  # Display the Gmail link
     with col2:
-        if st.button(" Discard & Restart"):
+        if st.button("Discard & Restart"):
             reset_state()
